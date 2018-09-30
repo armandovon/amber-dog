@@ -8,4 +8,9 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/index.html'))
 })
 
+app.get('/url', function (req, res){
+    res.sendFile(path.join(__dirname + '/urls.txt'))
+})
+
 app.listen(3000, () => console.log('App listening on port 3000'))
+
