@@ -3,9 +3,85 @@
   <head>
     <meta charset="utf-8">
     <title>amber-dog</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script>
+
+      //to store images, description
+      var url = [];
+      var info = {};
+      var description = {"0":""};
+
+      //get all images and descriptions
+      function getImages(){
+        $.ajax({type: "GET",url: "url", success: function(result){
+
+            $("#photos").html("");
+
+            var lines = result.split("\n")
+            for(var i = 0; i < lines.length; i++){
+              url.push(lines[i]);
+              info[i] = lines[i];
+              if(Object.keys(description).length < i){
+                if(!description[i]){
+                  description[i] = "";
+                }
+              }
+              
+            }
+            
+            //Localstorage descriptions
+            var desc = localStorage.getItem('description');
+            description = JSON.parse(desc);
+
+            //insert all images/descriptions to page 
+            for(var i = 0; i < Object.keys(info).length; i++){
+              var start = "<figure><button title='edit' onclick='addTextInput("+i+")' class=' editbtn btn-xs' id='"+i+"edit'></button><a href='"+info[i]+"' title='"+info[i]+"'><img src='";
+              var id = "' id='";
+              var addButton = i+"' /></a><figcaption class='fig'>"+description[i]+"<br />";
+              var addDesc = "<div class='form-group'><input id='"+i+i+"' class='hidden form-control' type='text' placeholder='add description' ><button onclick='addText("+i+")' type='button' id='"+i+i+i+"' class='hidden btn-block btn-info'>Add</button></div></figcaption></figure>";
+
+              if(info[i] != "https://amsterdam.fkttech.com/62/bd/2e/62bd2e773432433db91814940c7f6"){
+
+                $("#photos").append(start+info[i]+id+addButton+addDesc);
+              }
+
+            }
+          }});
+        }
+      
+        getImages();
+
+      //Open input
+      function addTextInput(id){
+              $('#'+id+id).show();
+              $('#'+id+id+id).show();
+                $('#'+id+'edit').hide();
+            }
+
+      //Add description
+      function addText(id){
+
+          link = url[id];
+          info[id] = link;
+          x = JSON.stringify(info);
+          var val = $('#'+id+id).val();
+          description[id] = val;
+          localStorage.setItem("description", JSON.stringify(description));
+          $('#'+id+id).hide();
+          $('#'+id+id+id).hide();
+          $('#'+id+'edit').show();
+          getImages();
+      }
+
+    </script>
+
   </head>
   <body>
+    
     <div id="app"></div>
     <script src="/build.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   </body>
 </html>
